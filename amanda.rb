@@ -37,34 +37,12 @@ class Amanda
                                     received_objects, local_objects, total_deltas, indexed_deltas, received_bytes|
       pp total_objects, received_objects}, checkout_branch: head_branch } )
 
-    # Octokit.configure do |c|
-    #   c.login = ENV['GITHUB_LOGIN']
-    #   c.password = ENV['GITHUB_PASSWORD']
-    # end
-    #
-    # name = 'rodriggochaves/literate-lamp'
-    #
-    #
-    # pull_requests = Octokit.pull_requests(name, status: 'open')[0]
-    #
-    #
-    # head_sha = pull_requests[:head][:sha]
-    #
-    # files = Octokit.pull_request_files(name, 3)
-    #
-    # pp files
-    # example = files[0]
-    # # commit = Octokit.commit(name, head_sha)
-    #
-    # patch = GitDiffParser::Patch.new(example[:patch])
-    #
-    # cop = RuboCop::Cop::Style::StringLiterals
-    # team = RuboCop::Cop::Team.new(RuboCop::Cop::Registry.new([cop]),
-    #                               RuboCop::ConfigLoader.default_configuration,
-    #                               {auto_correct: true})
-    # patch.changed_lines.each do |l|
-    #   pp team.auto_correct(l.content, [cop])
-    # end
+    repo = Rugged::Repository.new('./tmp')
+
+    author = { email: "rodriggochaves@gmail.com", time: Time.now, name: "rodriggochaves" }
+    # tree_builder = Rugged::Tree::Builder.new(repo)
+    index = repo.index
+
 
 
 
