@@ -29,8 +29,13 @@ class Amanda
     head_branch = pull_requests[:head][:ref]
 
     delete_tmp
+
+    # things to do
+    # 1 - mudar a branch para a branch alvo
+    Rugged::Repository.clone_at("https://github.com/rodriggochaves/literate-lamp.git", "./tmp", {
+      transfer_progress: lambda { |total_objects, indexed_objects,
                                     received_objects, local_objects, total_deltas, indexed_deltas, received_bytes|
-                                  pp received_bytes, total_objects, received_objects}})
+      pp total_objects, received_objects}, checkout_branch: head_branch } )
 
     # Octokit.configure do |c|
     #   c.login = ENV['GITHUB_LOGIN']
