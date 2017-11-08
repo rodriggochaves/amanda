@@ -4,8 +4,15 @@ require 'octokit'
 require 'pp'
 require 'git_diff_parser'
 require 'rugged'
+require 'fileutils'
 
 DotEnv.get_environment
+
+def delete_tmp
+  if File.directory?("./tmp")
+    FileUtils.rm_rf './tmp'
+  end
+end
 
 class Amanda
   def initialize
