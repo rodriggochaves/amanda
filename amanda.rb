@@ -53,8 +53,16 @@ class Amanda
 
     index.write()
 
+    options = {}
+    options[:tree] = index.write_tree(repo)
 
+    options[:author] = author
+    options[:committer] = author
+    options[:message] =  "Amanda checking some code smell"
+    options[:parents] = repo.empty? ? [] : [ repo.head.target ].compact
+    options[:update_ref] = 'HEAD'
 
+    Rugged::Commit.create(repo,options)
     
 
     # usar o octokit para recuperar os arquivos
