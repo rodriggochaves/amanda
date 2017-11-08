@@ -34,7 +34,7 @@ class Amanda
     # 1 - mudar a branch para a branch alvo
     Rugged::Repository.clone_at("https://github.com/rodriggochaves/literate-lamp.git", "./tmp", {
       transfer_progress: lambda { |total_objects, indexed_objects,
-                                    received_objects, local_objects, total_deltas, indexed_deltas, received_bytes|
+      received_objects, local_objects, total_deltas, indexed_deltas, received_bytes|
       pp total_objects, received_objects}, checkout_branch: head_branch } )
 
     repo = Rugged::Repository.new('./tmp')
@@ -55,7 +55,7 @@ class Amanda
 
     options = {}
     options[:tree] = index.write_tree(repo)
-
+    
     options[:author] = author
     options[:committer] = author
     options[:message] =  "Amanda checking some code smell"
@@ -63,9 +63,14 @@ class Amanda
     options[:update_ref] = 'HEAD'
 
     Rugged::Commit.create(repo,options)
-    
 
-    # usar o octokit para recuperar os arquivos
-    # usar o metodo .inspect_file
+    remote = repo.remotes['origin']
+
+    credentials = Rugged::Credentials::UserPassword.new(
+      username: ENV['GITHUB_LOGIN'],
+      password: ENV['GITHUB_PASSWORD'])
+
+    remote.push(["refs/heads/#{head_branch}"], credentials: credentials)
+    
   end
 end
