@@ -43,6 +43,15 @@ class Amanda
     # tree_builder = Rugged::Tree::Builder.new(repo)
     index = repo.index
 
+    # all files
+    Dir["./tmp/**/*.rb"].each do |file|
+      system "rubocop -a #{file}"
+      name = file.split("/").last
+      oid = Rugged::Blob.from_workdir repo, name
+      index.add(:path => name, :oid => oid, :mode => 0100644) 
+    end
+
+    index.write()
 
 
 
