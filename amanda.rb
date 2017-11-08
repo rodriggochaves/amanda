@@ -16,8 +16,19 @@ end
 
 class Amanda
   def initialize
-    Rugged::Repository.clone_at("https://github.com/rodriggochaves/literate-lamp.git", "./tmp",
-                                {transfer_progress: lambda { |total_objects, indexed_objects,
+
+    Octokit.configure do |c|
+      c.login = ENV['GITHUB_LOGIN']
+      c.password = ENV['GITHUB_PASSWORD']
+    end
+
+    name = 'rodriggochaves/literate-lamp'
+
+    pull_requests = Octokit.pull_requests(name, status: 'open')[0]
+
+    head_branch = pull_requests[:head][:ref]
+
+    delete_tmp
                                     received_objects, local_objects, total_deltas, indexed_deltas, received_bytes|
                                   pp received_bytes, total_objects, received_objects}})
 
