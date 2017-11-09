@@ -11,7 +11,7 @@ require_relative 'visitors/clone_repository_visitor'
 
 DotEnv.get_environment
 
-class Amanda
+class BillyBot
   include LanguageSelector
 
   def initialize(repository_name, repository_language)
@@ -32,7 +32,7 @@ class Amanda
   def get_head_branch_of_pull_request(repository_name)
     configure_octokit_credentials
     pull_requests = Octokit.pull_requests(repository_name, status: 'open')[0]
-    head_branch = pull_requests[:head][:ref]
+    pull_requests[:head][:ref]
   end
 
   def configure_octokit_credentials
