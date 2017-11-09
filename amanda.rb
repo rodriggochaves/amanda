@@ -11,7 +11,7 @@ require_relative 'visitors/clone_repository_visitor'
 
 DotEnv.get_environment
 
-class BillyBot
+class Amanda
   include LanguageSelector
 
   def initialize(repository_name, repository_language)
@@ -47,6 +47,5 @@ class BillyBot
       FileUtils.rm_rf './tmp'
     end
   end
-
 
 end
