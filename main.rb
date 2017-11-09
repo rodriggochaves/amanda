@@ -1,3 +1,3 @@
 require_relative './amanda'
 
-Amanda.new("-R")
+Amanda.new("rodriggochaves/literate-lamp","-R")
