@@ -57,7 +57,7 @@ class Analyzer
     Rugged::Repository.clone_at(@repository, './tmp', checkout_branch: @branch)
   end
 
-  def add_file_to_tree(file_name)
+  def add_file_to_git_tree(file_name)
     oid = Rugged::Blob.from_workdir @repo_reference, file_name
     @index_reference.add(:path => file_name, :oid => oid, :mode => 0100644)
   end

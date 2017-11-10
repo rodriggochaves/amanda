@@ -21,6 +21,7 @@ class RubyAnalyzer < Analyzer
       system "rubocop -a #{file}"
       file_name = file.split("/").last
       add_file_to_tree(file_name)
+      add_file_to_git_tree(file_name)
     end
   end
 end
