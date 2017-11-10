@@ -15,12 +15,10 @@ class RubyAnalyzer < Analyzer
   end
 
   def run_rubocop
-    # tree_builder = Rugged::Tree::Builder.new(repo)
-    # all files
+    # run in all files
     Dir["./tmp/**/*.rb"].each do |file|
       system "rubocop -a #{file}"
-      file_name = file.split("/").last
-      add_file_to_tree(file_name)
+      file_name = File.basename(file)
       add_file_to_git_tree(file_name)
     end
   end
