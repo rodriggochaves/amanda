@@ -8,8 +8,8 @@ class Analyzer
   attr_reader :branch
   attr_reader :email
   attr_reader :username
-  attr_accessor :repo_reference
-  attr_accessor :index_reference
+  attr_reader :repo_reference
+  attr_reader :index_reference
 
 
   def initialize(repo, branch)
