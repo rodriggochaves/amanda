@@ -16,7 +16,7 @@ class RubyAnalyzer < Analyzer
 
   def run_rubocop
     # run in all files
-    Dir["./tmp/**/*.rb"].each do |file|
+    @files.map{ |e| "./tmp/#{e}" }.each do |file|
       system "rubocop -a #{file}"
       file_name = File.basename(file)
       add_file_to_git_tree(file_name)
