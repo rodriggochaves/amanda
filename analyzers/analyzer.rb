@@ -35,6 +35,9 @@ class Analyzer
   def setup_repository
     @repo_reference = Rugged::Repository.new('./tmp')
     @index_reference = @repo_reference.index
+    @base_branch = "amanda-checking-#{@branch}"
+    @repo_reference.create_branch(@base_branch)
+    @repo_reference.checkout(@base_branch)
   end
 
   def setup_author
