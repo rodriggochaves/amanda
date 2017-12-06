@@ -4,6 +4,7 @@ GEM
     addressable (2.5.2)
       public_suffix (>= 2.0.2, < 4.0)
     ast (2.3.0)
+    byebug (9.1.0)
     dot_env (0.0.3)
     faraday (0.13.1)
       multipart-post (>= 1.2, < 3)
@@ -37,6 +38,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  byebug
   dot_env (~> 0.0.3)
   git_diff_parser
   octokit (~> 4.7)

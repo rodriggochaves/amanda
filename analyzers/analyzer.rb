@@ -12,11 +12,12 @@ class Analyzer
   attr_reader :index_reference
 
 
-  def initialize(repo, branch)
+  def initialize(repo, branch, files)
     @repository = repo
     @branch = branch
-    @email = "renan.lobato.rheinboldt@gmail.com"
-    @username = "renanlr"
+    @email = "rodriggo.chaves@gmail.com"
+    @username = "rodriggochaves"
+    @files = files
     clone_repository
     setup_repository
   end
@@ -34,6 +35,9 @@ class Analyzer
   def setup_repository
     @repo_reference = Rugged::Repository.new('./tmp')
     @index_reference = @repo_reference.index
+    @base_branch = "amanda-checking-#{@branch}"
+    @repo_reference.create_branch(@base_branch)
+    @repo_reference.checkout(@base_branch)
   end
 
   def setup_author
