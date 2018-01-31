@@ -1,10 +1,4 @@
 require "amanda_bot/version"
-require 'rubocop'
-require 'octokit'
-require 'pp'
-require 'git_diff_parser'
-require 'fileutils'
-require 'byebug'
 require_relative 'amanda_bot/language_selector'
 require_relative 'amanda_bot/analyzers/ruby_analyzer'
 require_relative 'amanda_bot/visitors/analyze_visitor'
@@ -13,7 +7,11 @@ module AmandaBot
   class Amanda
     include LanguageSelector
 
-    def initialize(repository_name, repository_language)
+    def initialize
+      true
+    end
+
+    def run(repository_name, repository_language)
       @repository_name = repository_name
       repository_full_name = "https://github.com/#{repository_name}.git"
       configure_octokit_credentials
