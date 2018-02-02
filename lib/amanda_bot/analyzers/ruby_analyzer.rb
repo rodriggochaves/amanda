@@ -12,10 +12,9 @@ class RubyAnalyzer < Analyzer
     credentials = Rugged::Credentials::UserPassword.new(username: ENV['GITHUB_LOGIN'],
                                                         password: ENV['GITHUB_PASSWORD'])
     remote.push(["refs/heads/#{@base_branch}"], credentials: credentials)
-    
-    client = Octokit::Client.new(:login => ENV['GITHUB_LOGIN'], :password => ENV['GITHUB_PASSWORD'])
-
-    client.create_pull_request('rodriggochaves/literate-lamp', @branch, @base_branch, "Amanda checking some code smells")
+    client = ::Octokit::Client.new(:login => ENV['GITHUB_LOGIN'], :password => ENV['GITHUB_PASSWORD'])
+    client.create_pull_request('rodriggochaves/literate-lamp', @branch, @base_branch, 
+                                "Amanda checking some code smells")
   end
 
   def run_rubocop

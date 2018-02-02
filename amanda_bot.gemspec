@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["rodriggo.chaves@gmail.com"]
 
   spec.summary       = "A Bot that receives a pull request and runs a analyses on it"
-  spec.homepage      = "https://github.com/rodriggochaves/amanda"
+  spec.homepage      = "https://github.com/rodriggochaves/amanda_bot"
   spec.license       = "MIT"
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
@@ -29,13 +29,13 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
+  spec.add_dependency "rubocop", "~> 0.52.1"
+  spec.add_dependency "dot_env", "~> 0.0.3"
+  spec.add_dependency "octokit", "~> 4.7"
+  spec.add_dependency "git_diff_parser", "~> 3.1.0"
+  spec.add_dependency "rugged", "~> 0.26.0"
   spec.add_development_dependency "bundler", "~> 1.16"
   spec.add_development_dependency "rake", "~> 10.0"
   spec.add_development_dependency "rspec", "~> 3.0"
-  spec.add_runtime_dependency "rubocop", "~> 0.52.1"
-  spec.add_runtime_dependency "dot_env", "~> 0.0.3"
-  spec.add_runtime_dependency "octokit", "~> 4.7"
-  spec.add_runtime_dependency "git_diff_parser", "~> 3.1.0"
-  spec.add_runtime_dependency "rugged", "~> 0.26.0"
   spec.add_development_dependency "byebug", "~> 10.0.0"
 end
