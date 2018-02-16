@@ -24,7 +24,9 @@ module AmandaBot
       current_pull_request = get_pull_request(repository_name)
       files_changed = get_files_changed(current_pull_request)
       head_branch = current_pull_request[:head][:ref]
-      analyze_code_style(head_branch, files_changed, repository_full_name, repository_language)
+      unless head_branch.include?("amanda-checking")
+        analyze_code_style(head_branch, files_changed, repository_full_name, repository_language)  
+      end
     end
 
     def get_files_changed(pr)
