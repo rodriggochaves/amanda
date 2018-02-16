@@ -10,8 +10,9 @@ module AmandaBot
   class Amanda
     include LanguageSelector
 
-    def initialize
-      ::Octokit.configure do |c|
+    def initialize(octokit)
+      @octokit = octokit
+      @octokit.configure do |c|
         c.login = ENV['GITHUB_LOGIN']
         c.password = ENV['GITHUB_PASSWORD']
       end
@@ -27,13 +28,12 @@ module AmandaBot
     end
 
     def get_files_changed(pr)
-      files_changed = ::Octokit.pull_request_files(@repository_name, pr[:number])
+      files_changed = @octokit.pull_request_files(@repository_name, pr[:number])
       files_changed.map{ |e| e[:filename] }
     end
 
     def get_pull_request(repository_name)
-      # here goes some fancy logic to improve the pull request selection
-      ::Octokit.pull_requests(repository_name, status: 'open')[0]
+      @octokit.pull_requests(repository_name, status: 'open')[0]
     end
 
     def analyze_code_style(head_branch, files, repository_full_name, repository_language)
@@ -41,5 +41,8 @@ module AmandaBot
       analyzer.accept(AnalyzeVisitor.new)
     end
 
+    def self.create
+      self.new(Octokit)
+    end
   end
 end
