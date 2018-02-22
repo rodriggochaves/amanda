@@ -4,6 +4,7 @@ require 'git_diff_parser'
 require 'fileutils'
 require_relative 'amanda_bot/language_selector'
 require_relative 'amanda_bot/analyzers/ruby_analyzer'
+require_relative 'amanda_bot/analyzers/javascript_analyzer'
 require_relative 'amanda_bot/visitors/analyze_visitor'
 
 module AmandaBot
@@ -39,8 +40,8 @@ module AmandaBot
     end
 
     def analyze_code_style(head_branch, files, repository_full_name, repository_language)
-      analyzer = create_analyzer(repository_full_name, files, repository_language, head_branch)
-      analyzer.accept(AnalyzeVisitor.new)
+      analyzers = create_analyzers(repository_full_name, files, repository_language, head_branch)
+      analyzers.each{ |a| a.accept(AnalyzeVisitor.new) }
     end
 
     def self.create
