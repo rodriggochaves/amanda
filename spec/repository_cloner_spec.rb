@@ -14,7 +14,7 @@ RSpec.describe 'cloning a repository' do
     it "verify if the folder is empty" do
       spy = class_double(Dir)
         .as_stubbed_const(:transfer_nested_constants => true)
-      expect(spy).to receive(:[]).with("/tmp/current_repository/*").and_return([])
+      expect(spy).to receive(:[]).with("./tmp/repositories/*").and_return([])
       cloner = AmandaBot::RepositoryCloner.new( repository_name, branch )
       cloner.prepare_temp_folder
     end
@@ -23,7 +23,7 @@ RSpec.describe 'cloning a repository' do
       allow(Dir).to receive(:[]) { ["text1.txt", "text2.txt"] }
       spy = class_double(FileUtils)
         .as_stubbed_const(:transfer_nested_constants => true)
-      expect(spy).to receive(:rm_rf).with(Dir["/tmp/current_repository/*"], { secure: true })
+      expect(spy).to receive(:rm_rf).with(Dir["./tmp/repositories/*"], { secure: true })
       cloner = AmandaBot::RepositoryCloner.new( repository_name, branch )
       cloner.prepare_temp_folder
     end
@@ -33,8 +33,8 @@ RSpec.describe 'cloning a repository' do
     allow(Dir).to receive(:[]) { [] }
     spy = class_double(Rugged::Repository)
       .as_stubbed_const(:transfer_nested_constants => true)
-    expect(spy).to receive(:clone_at).with("rodriggochaves/literate-lamp",
-                                           "/tmp/current_repository/rodriggochaves/literate-lamp",
+    expect(spy).to receive(:clone_at).with("https://github.com/rodriggochaves/literate-lamp.git",
+                                           "./tmp/repositories/rodriggochaves/literate-lamp",
                                            { checkout_branch: branch })
     cloner = AmandaBot::RepositoryCloner.new repository_name, branch
     cloner.clone
