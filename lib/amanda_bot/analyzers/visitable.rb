@@ -1,5 +1,5 @@
 module Visitable
-  def accept(visitor)
-    visitor.visit(self)
+  def accept(visitor, files)
+    visitor.visit(self, files)
   end
 end
