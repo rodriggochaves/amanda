@@ -15,6 +15,11 @@ module AmandaBot
         c.login = ENV['GITHUB_LOGIN']
         c.password = ENV['GITHUB_PASSWORD']
       end
+
+    def setup_repository
+      @repository = AmandaBot::RepositoryManager.new( @repository_name, @head_branch )
+      @repository.clone
+      @repository.setup_work_branch
     end
 
     def run(repository_name, repository_language)
