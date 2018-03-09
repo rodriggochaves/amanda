@@ -1,5 +1,6 @@
 require 'rugged'
 require 'fileutils'
+require 'dotenv/load'
 
 module AmandaBot
   class RepositoryManager
@@ -30,9 +31,9 @@ module AmandaBot
     end
 
     def setup_work_branch
-      name = "amanda-checking-#{@branch}"
-      @repository.create_branch(name)
-      @repository.checkout(name)
+      @working_branch = "amanda-checking-#{@branch}"
+      @repository.create_branch(@working_branch)
+      @repository.checkout(@working_branch)
     end
 
     def add_file_to_git_tree file
@@ -60,6 +61,13 @@ module AmandaBot
         update_ref: 'HEAD',
       }
       Rugged::Commit.create(@repository, options)
+    end
+
+    def push
+      remote = @repository.remotes['origin']
+      credentials = Rugged::Credentials::UserPassword.new(username: ENV['GITHUB_LOGIN'],
+                                                          password: ENV['GITHUB_PASSWORD'])
+      remote.push(["+refs/heads/#{@working_branch}"], credentials: credentials)
     end
 
   end

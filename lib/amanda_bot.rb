@@ -26,6 +26,7 @@ module AmandaBot
         changes.each{ |c| @repository.add_file_to_git_tree(c) }
         @repository.commit_changes
       end
+      @repository.push 
     end
 
     def setup_repository
