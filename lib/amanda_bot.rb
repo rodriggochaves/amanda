@@ -54,5 +54,8 @@ module AmandaBot
       ::JSON.parse(::JSON[h], symbolize_names: true)
     end
 
+    def self.create
+      self.new(Octokit)
+    end
   end
 end
