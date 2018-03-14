@@ -1,6 +1,5 @@
 class AnalyzeVisitor
-
-  def visit(subject)
-    subject.analyze
+  def visit(subject, files)
+    subject.analyze files
   end
 end

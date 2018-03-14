@@ -1,11 +1,22 @@
-module LanguageSelector
-  def create_analyzer(repository_full_name, files, repository_language, head_branch)
-    case repository_language
-      when "-R"
-        ruby_files = files.select{ |e| e.match(/(\S)*.rb/) }
-        RubyAnalyzer.new(repository_full_name, head_branch, ruby_files)
-      else
-        nil
+module AmandaBot
+  class LanguageSelector
+    def self.analyzers repo, languages
+      parse(languages).map { |l| get_analyzer(l, repo) }
+    end
+
+    def self.parse input
+      input.split(" ").map { |e| e.gsub("--", "").to_sym }
+    end
+
+    def self.get_analyzer sym, repo
+      analyzer_map[sym].new(repo)
+    end
+
+    def self.analyzer_map
+      {
+        ruby: RubyAnalyzer,
+        javascript: JavascriptAnalyzer
+      }
     end
   end
 end

@@ -1,46 +1,57 @@
-require "amanda_bot/version"
 require 'octokit'
 require 'git_diff_parser'
 require 'fileutils'
+require 'json'
+require 'byebug'
+require_relative "amanda_bot/version"
 require_relative 'amanda_bot/language_selector'
 require_relative 'amanda_bot/analyzers/ruby_analyzer'
 require_relative 'amanda_bot/visitors/analyze_visitor'
+require_relative 'amanda_bot/repository_manager'
 
 module AmandaBot
   class Amanda
-    include LanguageSelector
-
-    def initialize(octokit)
-      @octokit = octokit
-      @octokit.configure do |c|
-        c.login = ENV['GITHUB_LOGIN']
-        c.password = ENV['GITHUB_PASSWORD']
-      end
-    end
-
-    def run(repository_name, repository_language)
+    def initialize( repository_name, pull_request_event )
       @repository_name = repository_name
-      repository_full_name = "https://github.com/#{repository_name}.git"
-      current_pull_request = get_pull_request(repository_name)
-      files_changed = get_files_changed(current_pull_request)
-      head_branch = current_pull_request[:head][:ref]
-      unless head_branch.include?("amanda-checking")
-        analyze_code_style(head_branch, files_changed, repository_full_name, repository_language)  
+      @pull_request_event = deep_symbolize_keys(pull_request_event)
+      @base_branch = @pull_request_event[:base][:ref]
+      @head_branch = @pull_request_event[:head][:ref]
+    end
+
+    def run params
+      setup_repository
+      analyzers(params).each do |analyzer|
+        files_changed = @repository.diff("origin/#{@base_branch}")
+        changes = analyzer.accept(AnalyzeVisitor.new, files_changed)
+        changes.each{ |c| @repository.add_file_to_git_tree(c) }
+        @repository.commit_changes
       end
+      @repository.push 
     end
 
-    def get_files_changed(pr)
-      files_changed = @octokit.pull_request_files(@repository_name, pr[:number])
-      files_changed.map{ |e| e[:filename] }
+    def setup_repository
+      @repository = AmandaBot::RepositoryManager.new( @repository_name, @head_branch )
+      @repository.clone
+      @repository.setup_work_branch
     end
 
-    def get_pull_request(repository_name)
-      @octokit.pull_requests(repository_name, status: 'open')[0]
+    def analyzers params
+      AmandaBot::LanguageSelector.analyzers @repository_name, params
     end
 
-    def analyze_code_style(head_branch, files, repository_full_name, repository_language)
-      analyzer = create_analyzer(repository_full_name, files, repository_language, head_branch)
-      analyzer.accept(AnalyzeVisitor.new)
+    def files_changed
+      @repository.diff( "origin/#{@base_branch}" )
+    end
+
+    def self.test_options
+      {
+        base: { ref: "master" },
+        head: { ref: "issue-3" }
+      }
+    end
+
+    private def deep_symbolize_keys h
+      ::JSON.parse(::JSON[h], symbolize_names: true)
     end
 
     def self.create
